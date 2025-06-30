@@ -56,7 +56,7 @@ src/
 ```
 ## API Endpoints
 ### Продукция
-GET /api/products - Получить список продуктов с фильтрацией
+```GET /api/products ``` - Получить список продуктов с фильтрацией
 Параметры:
 
 + name - Фильтр по наименованию
@@ -66,7 +66,7 @@ GET /api/products - Получить список продуктов с филь
 + isImport - Фильтр по импортозамещению (true/false)
 
 ### Отчеты
-GET /api/report/download - Скачать отчет в формате DOCX
+```GET /api/report/download``` - Скачать отчет в формате DOCX
 Параметры:
 
 + template - Имя шаблона (template1/template2)
@@ -96,9 +96,9 @@ http://localhost:8080/v3/api-docs
 ```
 
 CORS: 
-```text
-Разрешены запросы с http://localhost:3000
-```
+
+Разрешены запросы с ```http://localhost:3000```
+
 
 База данных:
 
