@@ -1,48 +1,79 @@
-# Read Me First
+# Product Report Frontend
 
-The following was discovered as part of building this project:
+Frontend часть приложения для генерации отчетов о продукции.
 
-* No Docker Compose services found. As of now, the application won't start! Please add at least one service to the
-  `compose.yaml` file.
+## Требования
 
-# Getting Started
+- Node.js (версия 14 или выше)
+- npm (обычно устанавливается вместе с Node.js)
 
-### Reference Documentation
+## Установка
 
-For further reference, please consider the following sections:
+1. Склонируйте репозиторий (если еще не сделано)
+2. Перейдите в директорию проекта:
+   cd productreportfront
+   
+### Установите зависимости:
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.5.3/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.5.3/maven-plugin/build-image.html)
-* [Rest Repositories](https://docs.spring.io/spring-boot/3.5.3/how-to/data-access.html#howto.data-access.exposing-spring-data-repositories-as-rest)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/3.5.3/reference/using/devtools.html)
-* [Docker Compose Support](https://docs.spring.io/spring-boot/3.5.3/reference/features/dev-services.html#features.dev-services.docker-compose)
-* [Spring Web](https://docs.spring.io/spring-boot/3.5.3/reference/web/servlet.html)
+npm install
 
-### Guides
+## Запуск приложения
 
-The following guides illustrate how to use some features concretely:
+Запустите сервер:
 
-* [Accessing JPA Data with REST](https://spring.io/guides/gs/accessing-data-rest/)
-* [Accessing Neo4j Data with REST](https://spring.io/guides/gs/accessing-neo4j-data-rest/)
-* [Accessing MongoDB Data with REST](https://spring.io/guides/gs/accessing-mongodb-data-rest/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
+npm start
 
-### Docker Compose support
+Откройте в браузере:
 
-This project contains a Docker Compose file named `compose.yaml`.
+http://localhost:3000
 
-However, no services were found. As of now, the application won't start!
+##Структура проекта
 
-Please make sure to add at least one service in the `compose.yaml` file.
+index.html - главная HTML страница
 
-### Maven Parent overrides
+main.js - JavaScript логика приложения
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the
-parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+server.js - простой Express сервер для раздачи статики
 
+##Использование
+
+На главной странице отображается таблица с продукцией
+
+Используйте поля фильтрации для поиска нужных продуктов:
+
+Наименование продукта
+
+Тип продукта
+
+Импортозамещающий статус
+
+Нажмите кнопку "Фильтровать" для применения фильтров
+
+Для экспорта отчета:
+
+Нажмите кнопку "Экспорт"
+
+Выберите шаблон отчета
+
+Отчет скачается в формате .docx
+
+## Зависимости
+express - для сервера раздачи статики
+
+## Конфигурация
+Приложение ожидает, что backend API доступен по адресу http://localhost:8080. Если ваш backend работает на другом адресе/порту, измените URL в файле main.js.
+
+## Возможные проблемы
+Если приложение не запускается, проверьте:
+
+Что порт 3000 не занят другим приложением
+
+Что все зависимости установлены (npm install)
+
+Что backend сервер запущен и доступен
+
+Если не работают запросы к API:
+
+Проверьте CORS настройки на backend
+
+Убедитесь что backend действительно доступен по указанному URL
