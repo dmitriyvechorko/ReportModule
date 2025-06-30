@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Отчет по продукции</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+    input, select { margin-right: 10px; width: 200px; }
+  </style>
+</head>
+<body>
+
+<h1>Отчет</h1>
+<h3>Информация о продукции:</h3>
+
+<div>
+  <input type="text" id="filterName" placeholder="Наименование продукта">
+  <input type="text" id="filterType" placeholder="Тип продукта">
+
+  <select id="filterImport">
+    <option value="">Все</option>
+    <option value="true">Импортозамещающий</option>
+    <option value="false">Не импортозамещающий</option>
+  </select>
+
+  <button onclick="fetchProducts()">Фильтровать</button>
+</div>
+
+<div>
+<!-- В вашем index.html -->
+<button onclick="openExportModal()">Экспорт</button>
+</div>
+
+<!-- Модальное окно -->
+<div id="exportModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+  <div style="background:white; margin:10% auto; padding:20px; width:600px;">
+    <h3>Выберите шаблон:</h3>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+      <!-- Пример шаблона -->
+      <div style="text-align:center;">
+        <img src="http://localhost:8080/images/templates/rep1.png" width="150" />
+        <br/>
+        <button onclick="generateReport('template1')">Выбрать</button>
+      </div>
+
+      <div style="text-align:center;">
+        <img src="http://localhost:8080/images/templates/rep2.png" width="150" />
+        <br/>
+        <button onclick="generateReport('template2')">Выбрать</button>
+      </div>
+    </div>
+
+    <button onclick="closeExportModal()" style="margin-top:10px;">Закрыть</button>
+  </div>
+</div>
+
+<table id="productsTable">
+  <thead>
+  <tr>
+    <th>Наименование продукта</th>
+    <th>Тип продукции</th>
+    <th>Наименование организации</th>
+    <th>Адрес организации</th>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+
+
+<script src="main.js"></script>
+</body>
+</html>
