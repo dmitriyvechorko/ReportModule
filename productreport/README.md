@@ -1,79 +1,142 @@
-# Product Report Frontend
+# Product Report Backend
 
-Frontend часть приложения для генерации отчетов о продукции.
+Backend часть приложения для генерации отчетов о продукции, реализованная на Spring Boot.
 
 ## Требования
 
-- Node.js (версия 14 или выше)
-- npm (обычно устанавливается вместе с Node.js)
+- Java 17
+- Maven 3.8+
+- PostgreSQL 14+
+- Docker (опционально)
 
-## Установка
+## Установка и настройка
 
-1. Склонируйте репозиторий (если еще не сделано)
-2. Перейдите в директорию проекта:
-   cd productreportfront
-   
-### Установите зависимости:
-```bash
-npm install
-```
+1. **Настройка базы данных**:
+   - Установите PostgreSQL
+   - Создайте базу данных (по умолчанию используется `postgres`)
+   - Выполните SQL-скрипт из `src/main/resources/init.sql` для инициализации структуры БД
+
+2. **Настройка приложения**:
+   Скопируйте `application.properties` из `src/main/resources` и настройте подключение к БД:
+   ```properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+   spring.datasource.username=postgres
+   spring.datasource.password=your_password
 ## Запуск приложения
-
-Запустите сервер:
+Способ 1: Через Maven
 ```bash
-npm start
+mvn spring-boot:run
 ```
-Откройте в браузере:
-```url
-'http://localhost:3000'
+Способ 2: Сборка и запуск JAR
+```bash
+mvn clean package
+java -jar target/productreport-0.0.1-SNAPSHOT.jar
+```
+Способ 3: Через Docker (опционально)
+```bash
+docker build -t productreport-backend .
+docker run -p 8080:8080 productreport-backend
 ```
 ## Структура проекта
+```text
+src/
+├── main/
+│   ├── java/org/productreport/
+│   │   ├── config/       - Конфигурационные классы
+│   │   ├── controllers/  - REST контроллеры
+│   │   ├── dto/         - Data Transfer Objects
+│   │   ├── entity/      - Сущности JPA
+│   │   ├── repository/  - JPA репозитории
+│   │   ├── service/     - Бизнес-логика
+│   │   └── ProductreportApplication.java - Главный класс
+│   └── resources/
+│       ├── static/images/templates/ - Шаблоны отчетов
+│       ├── application.properties   - Конфигурация
+│       └── init.sql                - Инициализация БД
+```
+## API Endpoints
+### Продукция
+GET /api/products - Получить список продуктов с фильтрацией
+Параметры:
 
-index.html - главная HTML страница
++ name - Фильтр по наименованию
 
-main.js - JavaScript логика приложения
++ type - Фильтр по типу продукции
 
-server.js - простой Express сервер для раздачи статики
++ isImport - Фильтр по импортозамещению (true/false)
 
-## Использование
+### Отчеты
+GET /api/report/download - Скачать отчет в формате DOCX
+Параметры:
 
-На главной странице отображается таблица с продукцией
++ template - Имя шаблона (template1/template2)
 
-Используйте поля фильтрации для поиска нужных продуктов:
++ name - Фильтр по наименованию
 
-1. Наименование продукта;
++ type - Фильтр по типу продукции
 
-2. Тип продукта;
++ isImport - Фильтр по импортозамещению
 
-3. Импортозамещающий статус.
+## Документация API
+После запуска приложения доступна Swagger-документация:
 
-Нажмите кнопку "Фильтровать" для применения фильтров
+UI: 
+```url
+http://localhost:8080/swagger-ui
+```
+JSON:
+```url
+http://localhost:8080/v3/api-docs
+```
+## Настройки по умолчанию
 
-### Для экспорта отчета:
+Порт: 
+```text
+8080
+```
 
-1. Нажмите кнопку "Экспорт"
+CORS: 
+```text
+Разрешены запросы с http://localhost:3000
+```
 
-2. Выберите шаблон отчета
+База данных:
 
-Отчет скачается в формате .docx
+URL: 
+```url
+jdbc:postgresql://localhost:5432/postgres
+```
+Пользователь:
+```text
+postgres
+```
+Пароль: 
+```text
+устанавливаете свой (по умолчанию root)
+```
+## Шаблоны отчетов
+Система поддерживает 2 шаблона отчетов:
+
+template1 - Базовый отчет с основной информацией
+
+template2 - Расширенный отчет с отметкой об импортозамещении
+
+Можно легко добавлять новые шаблоны посредством паттерна проектирования "Стратегия"
+
+## Логирование
+Настроено логирование через Log4j2. Конфигурация может быть изменена в log4j2.xml.
 
 ## Зависимости
-express - для сервера раздачи статики
+Основные зависимости:
 
-## Конфигурация
-Приложение ожидает, что backend API доступен по адресу http://localhost:8080. Если ваш backend работает на другом адресе/порту, измените URL в файле main.js.
+* Spring Boot 3.5.3
 
-## Возможные проблемы
-Если приложение не запускается, проверьте:
+* Spring Data JPA
 
-+ Что порт 3000 не занят другим приложением
+* PostgreSQL Driver
 
-+ Что все зависимости установлены (npm install)
+* Apache POI (для генерации Word-отчетов)
 
-+ Что backend сервер запущен и доступен
+* Lombok
 
-Если не работают запросы к API:
-
-+ Проверьте CORS настройки на backend
-
-+ Убедитесь что backend действительно доступен по указанному URL
+* Springdoc OpenAPI (Swagger)
