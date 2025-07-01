@@ -1,3 +1,20 @@
+// Инициализируем переменные
+let filterTimeout;
+const exportModal = document.getElementById("exportModal");
+const previewModal = document.getElementById("previewModal");
+
+document.getElementById("previewImage");
+// ==== Фильтрация ====
+function handleFilterChange() {
+    clearTimeout(filterTimeout);
+    filterTimeout = setTimeout(fetchProducts, 300); // Задержка 300мс после последнего ввода
+}
+
+document.getElementById('filterName').addEventListener('input', handleFilterChange);
+document.getElementById('filterType').addEventListener('input', handleFilterChange);
+document.getElementById('filterImport').addEventListener('change', handleFilterChange);
+
+// ==== Загрузка продуктов ====
 async function fetchProducts() {
     const name = document.getElementById('filterName').value.trim();
     const type = document.getElementById('filterType').value.trim();
@@ -19,23 +36,77 @@ async function fetchProducts() {
         const row = document.createElement('tr');
 
         row.innerHTML = `
-      <td>${product.productName}</td>
-      <td>${product.productionType}</td>
-      <td>${product.enterpriseName || '-'}</td>
-      <td>${product.enterpriseAddress || '-'}</td>
-    `;
+            <td>${product.productName}</td>
+            <td>${product.productionType}</td>
+            <td>${product.enterpriseName || '-'}</td>
+            <td>${product.enterpriseAddress || '-'}</td>
+        `;
 
         tbody.appendChild(row);
     });
 }
+
+// ==== Модальное окно "Экспорт" ====
 function openExportModal() {
-    document.getElementById("exportModal").style.display = "block";
+    exportModal.style.display = "block";
 }
 
 function closeExportModal() {
-    document.getElementById("exportModal").style.display = "none";
+    exportModal.style.display = "none";
 }
 
+// ==== Функции для увеличенного предпросмотра ====
+function openPreview(imgSrc) {
+    const previewImage = document.getElementById('previewImage');
+    previewImage.src = imgSrc;
+
+    const previewModal = document.getElementById('previewModal');
+    previewModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closePreview() {
+    const previewImage = document.getElementById('previewImage');
+    previewImage.src = '';
+
+    const previewModal = document.getElementById('previewModal');
+    previewModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Инициализация превью при загрузке DOM
+document.addEventListener('DOMContentLoaded', function () {
+    const previews = document.querySelectorAll('.template-preview');
+
+    previews.forEach(preview => {
+        preview.addEventListener('click', function () {
+            const imgElement = this.querySelector('img');
+            const imgSrc = imgElement.getAttribute('data-src'); // читаем data-src
+            if (imgSrc) {
+                openPreview(imgSrc);
+            }
+        });
+    });
+
+    // Закрытие по клику вне картинки
+    previewModal.addEventListener('click', function (event) {
+        if (event.target === previewModal) {
+            closePreview();
+        }
+    });
+
+    // Закрытие по ESC
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && previewModal.style.display === 'flex') {
+            closePreview();
+        }
+    });
+
+    // Кнопка закрытия
+    document.querySelector('.close')?.addEventListener('click', closePreview);
+});
+
+// ==== Генерация отчёта ====
 async function generateReport(template) {
     const name = document.getElementById("filterName").value.trim();
     const type = document.getElementById("filterType").value.trim();
@@ -45,7 +116,7 @@ async function generateReport(template) {
     if (name) params.append("name", name);
     if (type) params.append("type", type);
     if (isImport !== "") params.append("isImport", isImport);
-    if (template) params.append("template", template); // <-- Добавлен параметр шаблона
+    if (template) params.append("template", template);
 
     const response = await fetch(`http://localhost:8080/api/report/download?${params.toString()}`, {
         method: "GET",
@@ -65,5 +136,6 @@ async function generateReport(template) {
 
     closeExportModal();
 }
-// Вызов при загрузке
+
+// ==== Загрузка при старте ====
 window.onload = fetchProducts;

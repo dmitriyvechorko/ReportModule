@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Отчет по продукции</title>
-  <style>
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
-    input, select { margin-right: 10px; width: 200px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Продукция</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/templates.css">
 </head>
 <body>
 
-<h1>Отчет</h1>
+<h1>Продукция</h1>
 <h3>Информация о продукции:</h3>
 
-<div>
+<div class="filter-container">
   <input type="text" id="filterName" placeholder="Наименование продукта">
   <input type="text" id="filterType" placeholder="Тип продукта">
 
@@ -24,36 +22,7 @@
     <option value="false">Не импортозамещающий</option>
   </select>
 
-  <button onclick="fetchProducts()">Фильтровать</button>
-</div>
-
-<div>
-<!-- В вашем index.html -->
-<button onclick="openExportModal()">Экспорт</button>
-</div>
-
-<!-- Модальное окно -->
-<div id="exportModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
-  <div style="background:white; margin:10% auto; padding:20px; width:600px;">
-    <h3>Выберите шаблон:</h3>
-
-    <div style="display:flex; gap:20px; flex-wrap:wrap;">
-      <!-- Пример шаблона -->
-      <div style="text-align:center;">
-        <img src="http://localhost:8080/images/templates/rep1.png" width="150" />
-        <br/>
-        <button onclick="generateReport('template1')">Выбрать</button>
-      </div>
-
-      <div style="text-align:center;">
-        <img src="http://localhost:8080/images/templates/rep2.png" width="150" />
-        <br/>
-        <button onclick="generateReport('template2')">Выбрать</button>
-      </div>
-    </div>
-
-    <button onclick="closeExportModal()" style="margin-top:10px;">Закрыть</button>
-  </div>
+  <button onclick="openExportModal()">Экспорт</button>
 </div>
 
 <table id="productsTable">
@@ -68,7 +37,38 @@
   <tbody></tbody>
 </table>
 
+<!-- Модальное окно ЭКСПОРТ -->
+<div id="exportModal" class="modal">
+  <div class="modal-content">
+    <h3>Выберите шаблон:</h3>
 
+    <div class="template-options">
+      <div class="template-option">
+        <div class="template-preview">
+          <img data-src="http://localhost:8080/images/templates/rep1.png" alt="Шаблон отчета 1" src="http://localhost:8080/images/templates/rep1.png">
+        </div>
+        <button onclick="generateReport('template1')">Выбрать</button>
+      </div>
+
+      <div class="template-option">
+        <div class="template-preview">
+          <img data-src="http://localhost:8080/images/templates/rep2.png" alt="Шаблон отчета 2" src="http://localhost:8080/images/templates/rep2.png">
+        </div>
+        <button onclick="generateReport('template2')">Выбрать</button>
+      </div>
+    </div>
+
+    <button onclick="closeExportModal()">Закрыть</button>
+  </div>
+</div>
+
+<!-- Модальное окно ПРЕДПРОСМОТРА -->
+<div id="previewModal" class="modal">
+  <div class="preview-modal-content">
+    <span class="close" onclick="closePreview()">&times;</span>
+    <img id="previewImage" src="" alt="Предпросмотр шаблона">
+  </div>
+</div>
 
 <script src="main.js"></script>
 </body>

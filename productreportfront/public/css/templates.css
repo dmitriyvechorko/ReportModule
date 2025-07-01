@@ -1,0 +1,94 @@
+/* Стили для секции с шаблонами */
+.template-options {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.template-option {
+    text-align: center;
+    width: 200px;
+}
+
+.template-preview {
+    cursor: pointer;
+    margin-bottom: 10px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.template-preview:hover {
+    transform: scale(1.05);
+}
+
+.template-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+#previewModal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Только затемнение */
+    justify-content: center;
+    align-items: center;
+}
+
+.preview-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 95vw;
+    max-height: 95vh;
+    padding: 0;
+    margin: 0;
+}
+
+/* Крестик закрытия */
+#previewModal .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 32px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+/* Само изображение в увеличенном виде */
+#previewImage {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #bbb;
+}

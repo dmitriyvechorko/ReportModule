@@ -2,11 +2,16 @@ package org.productreport.service;
 
 import lombok.AllArgsConstructor;
 import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.productreport.dto.ProductResponseDTO;
 import org.productreport.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -53,7 +58,6 @@ public class ReportService {
             }
         }
 
-        // Данные
         int num = 1;
         for (ProductResponseDTO product : products) {
             XWPFTableRow row = table.createRow();
@@ -86,11 +90,22 @@ public class ReportService {
 
         // === Таблица ===
         XWPFTable table = document.createTable();
-        table.setWidth("100%");
+
+        int totalWidthDXA = 8000;
+
+        // Установка ширины таблицы
+        CTTblPr tableProperties = table.getCTTbl().addNewTblPr();
+        CTTblWidth tableWidth = tableProperties.addNewTblW();
+        tableWidth.setW(BigInteger.valueOf(totalWidthDXA));
+        tableWidth.setType(STTblWidth.DXA);
+
+        // Проценты для каждого столбца
+        double[] columnPercents = {5.0, 20.0, 15.0, 22.0, 30.0, 8.0};
 
         // Заголовки таблицы
-        XWPFTableRow headerRow = table.getRow(0);
         String[] headers = {"№", "Наименование продукта", "Тип продукции", "Наименование организации", "Адрес организации", "Является импортозамещающей"};
+        XWPFTableRow headerRow = table.getRow(0);
+
         for (int i = 0; i < headers.length; i++) {
             if (i >= headerRow.getTableCells().size()) {
                 headerRow.createCell();
@@ -98,7 +113,15 @@ public class ReportService {
             XWPFTableCell cell = headerRow.getCell(i);
             if (cell != null) {
                 cell.setText(headers[i]);
-                cell.setColor("D3D3D3"); // серый фон заголовка
+                cell.setColor("D3D3D3");
+
+                // Вычисление ширины в DXA
+                int cellWidthDXA = (int) Math.round(totalWidthDXA * columnPercents[i] / 100.0);
+
+                CTTcPr tcPr = cell.getCTTc().addNewTcPr();
+                CTTblWidth cellWidth = tcPr.addNewTcW();
+                cellWidth.setType(STTblWidth.DXA);
+                cellWidth.setW(BigInteger.valueOf(cellWidthDXA));
             }
         }
 
@@ -110,7 +133,7 @@ public class ReportService {
             row.getCell(2).setText(product.getProductionType());
             row.getCell(3).setText(product.getEnterpriseName());
             row.getCell(4).setText(product.getEnterpriseAddress());
-            row.getCell(5).setText(String.valueOf(product.getIsImport()));
+            row.getCell(5).setText(product.getIsImport() ? "Да" : "Нет");
         }
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
